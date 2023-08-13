@@ -7,6 +7,7 @@ auth_controller = AuthController(app)
 
 #decorators*******************************************************************
 
+
 def loginRequired(f):
     @wraps(f)
     def decorated_function_login(*args, **kwargs):
@@ -30,6 +31,7 @@ def logoutRequired(f):
 @logoutRequired
 def protected_logout():
     return 'This is a protected route!'
+
 
 #********************************************************************************
 

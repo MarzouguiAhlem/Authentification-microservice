@@ -59,6 +59,7 @@ class AuthController:
         response = self.auth_service.reset_password_step3(password, session_cookie)
         return jsonify(response)
 
+
     def decorated_function_login(self, f, *args, **kwargs):
         if not self.auth_service.is_logged_in():
             return jsonify(msg="You must be logged in to perform this action"), 401
@@ -68,3 +69,4 @@ class AuthController:
         if  self.auth_service.is_logged_in():
             return jsonify(msg="You must be logged out to perform this action"), 401
         return f(*args, **kwargs)
+        
