@@ -1,12 +1,13 @@
 import uuid
 
 class User:
-    def __init__(self, name, email, password, address, id = uuid.uuid4().hex, isVerified=False, role="admin"):
+    def __init__(self, name, email, password, address, phone, id = uuid.uuid4().hex, isVerified=False, role="admin"):
         self.id = id
         self.name = name
         self.email = email
         self.password = password
         self.address = address
+        self.phone = phone
         self.isVerified = isVerified
         self.role = role
    
@@ -18,6 +19,7 @@ class User:
             "email": self.email,
             "password": self.password,
             "address": self.address,
+            "phone": self.phone,
             "isVerified": self.isVerified,
             "role": self.role
         }

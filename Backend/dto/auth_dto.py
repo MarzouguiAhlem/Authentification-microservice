@@ -5,6 +5,7 @@ class AuthDTO:
             self.email = data.get('email')
             self.password = data.get('password')
             self.address = data.get('address')
+            self.phone = data.get('phone')
             self.isVerified = data.get('isVerified', False)
             self.role = data.get('role', 'admin')
         else:
@@ -12,6 +13,7 @@ class AuthDTO:
             self.email = data.get('email')
             self.password = data.get('password')
             self.address = data.get('address')
+            self.phone = data.get('phone')
             self.isVerified = data.get('isVerified', False)
             self.role = data.get('role', 'admin')
         
@@ -30,6 +32,7 @@ class AuthDTO:
             "email": self.email,
             "password": self.password,
             "address": self.address,
+            "phone": self.phone,
             "isVerified": self.isVerified,
             "role": self.role
         }
@@ -40,6 +43,7 @@ class AuthDTO:
             "name": self.name,
             "email": self.email,
             "address": self.address,
+            "phone": self.phone,
             "isVerified": self.isVerified,
             "role": self.role
         }
@@ -52,6 +56,7 @@ class AuthDTO:
             "email": user.email,
             "password": user.password,
             "address": user.address,
+            "phone": user.phone,
             "isVerified": user.isVerified,
             "role": user.role
         }
