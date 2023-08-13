@@ -44,6 +44,7 @@ def login():
     return auth_controller.login()
 
 @app.route('/user/signout', methods=['GET'])
+@loginRequired
 def logout():
     return auth_controller.signout()
 
@@ -60,18 +61,22 @@ def verifyEmail():
     return auth_controller.verifyEmail()
 
 @app.route('/@me', methods=['GET'])
+@loginRequired
 def getSessionInfo():
     return auth_controller.getSessionInfo()
 
 @app.route('/resetPasswordStep1', methods=['POST'])
+@logoutRequired
 def resetPasswordStep1():
     return auth_controller.resetPasswordStep1()
 
 @app.route('/resetPasswordStep2', methods=['POST'])
+@logoutRequired
 def resetPasswordStep2():
     return auth_controller.resetPasswordStep2()
 
 @app.route('/resetPasswordStep3', methods=['POST'])
+@logoutRequired
 def resetPasswordStep3():
     return auth_controller.resetPasswordStep3()
 
