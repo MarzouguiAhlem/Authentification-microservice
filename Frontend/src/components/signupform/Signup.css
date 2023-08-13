@@ -1,0 +1,22 @@
+.btn-submit{
+    /* color: black !important ;  */
+    text-align: center !important;
+    display: flex;
+    justify-content: space-around;
+
+    
+}
+.btn-submit button{
+    width: 180px;
+    margin-top: 20px;
+}
+.btn-submit button[type=submit]{
+    
+    background-color: #ED6A5E !important;
+    border-color: #ED6A5E;
+}
+
+.btn-submit button[type=submit]:hover{
+    border-color: #e44d3f;
+    background-color: #e44d3f !important;
+}
