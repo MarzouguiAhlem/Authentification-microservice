@@ -5,6 +5,35 @@ from flask import Flask
 app = Flask(__name__)
 auth_controller = AuthController(app)
 
+#decorators*******************************************************************
+
+def loginRequired(f):
+    @wraps(f)
+    def decorated_function_login(*args, **kwargs):
+        return auth_controller.decorated_function_login(f, *args, **kwargs)
+    return decorated_function_login
+
+
+@app.route('/protected_login', methods=['GET'])
+@loginRequired
+def protected_login():
+    return 'This is a protected route!'
+
+
+def logoutRequired(f):
+    @wraps(f)
+    def decorated_function_logout(*args, **kwargs):
+        return auth_controller.decorated_function_logout(f, *args, **kwargs)
+    return decorated_function_logout
+
+@app.route('/protected_logout', methods=['GET'])
+@logoutRequired
+def protected_logout():
+    return 'This is a protected route!'
+
+#********************************************************************************
+
+
 
 @app.route('/test', methods=['GET'])
 def test():
