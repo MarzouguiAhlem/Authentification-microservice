@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
+import { Field } from "formik";
 import './Signup.css'
 import * as yup from "yup";
 import * as formik from "formik";
@@ -25,7 +26,8 @@ const SignupForm = () => {
     email: yup.string().required().email().max(50),
     password: yup.string().required().min(4).max(50),
     confirmPassword: yup.string().required().min(4).max(50).oneOf([yup.ref('password'), null], 'Passwords must match'),
-    adress: yup.string().required().max(200),
+    address: yup.string().required().max(200),
+    phone: yup.string().required("Phone number is required"),
     terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
   const dispatch = useDispatch()
@@ -68,8 +70,8 @@ const SignupForm = () => {
           let {confirmPassword,terms,...user} = values
           console.log(user)
           dispatch(userSignup({user:user, navigate:navigate}))
-          // dispatch(userSignup(user))
-          // .then(()=>navigate(relativePaths.verifyEmail))
+          //dispatch(userSignup(user))
+          //.then(()=>navigate(relativePaths.verifyEmail))
           actions.setSubmitting(true);
           actions.resetForm({
             values: {
@@ -78,7 +80,8 @@ const SignupForm = () => {
               email: "",
               password:"",
               confirmPassword:"",
-              adress: "",
+              address: "",
+              phone: "",
               terms: false,
             },
           });
@@ -90,6 +93,7 @@ const SignupForm = () => {
           password:"",
           confirmPassword:"",
           adress: "",
+          phone: "",
           terms: false,
         }}
       >
@@ -238,6 +242,27 @@ const SignupForm = () => {
                     {errors.adress}
                   </Form.Control.Feedback>
                 </FloatingLabel>
+
+                <Form.Group controlId="validationFormik08">
+                  <FloatingLabel
+                    controlId="validationFormik08"
+                    label="Phone Number"
+                    className="mb-3"
+                  >
+                    <Field
+                      type="tel"
+                      placeholder="Phone Number"
+                      name="phone"
+                      as={Form.Control}
+                      isValid={touched.phone && !errors.phone}
+                      isInvalid={touched.phone && !!errors.phone}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone}
+                    </Form.Control.Feedback>
+                  </FloatingLabel>
+                </Form.Group>
+
 
                 <Form.Group className="mb-3">
                   <Form.Check
