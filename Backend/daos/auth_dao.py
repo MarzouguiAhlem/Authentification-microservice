@@ -1,13 +1,13 @@
-from daos import db
+from daos import db # Import the db object from the daos module
 from dto.auth_dto import AuthDTO
 from models.user import User
 
 class AuthDAO:
     def __init__(self):
-        self.users = db['users']
+        self.users = db['users'] # Set the users collection in the db object as an instance variable
 
     def find_by_email(self, email):
-        user_doc = self.users.find_one({'email': email})
+        user_doc = self.users.find_one({'email': email}) # Find a user document in the users collection with the given email
         if user_doc is None:
             return None
         user_id = str(user_doc['_id'])
@@ -16,7 +16,7 @@ class AuthDAO:
                      user_id ,user_doc['isVerified'], user_doc['role'])
 
     def save(self, signup_data):
-        self.users.insert_one(signup_data)
+        self.users.insert_one(signup_data) # Insert the signup data into the users collection
         return User(signup_data["name"], signup_data["email"], \
                     signup_data["password"], signup_data["address"], signup_data["phone"], signup_data["_id"])
     
@@ -25,14 +25,14 @@ class AuthDAO:
         if user_doc is None:
             return None
         user_data = AuthDTO.from_user(user_doc)
-        session_data = user_data.get_session_data()
+        session_data = user_data.get_session_data() # Get the session data from the AuthDTO instance
         return session_data
     
     def update(self, email, update_data):
         user_doc = self.users.find_one({'email': email})
         if user_doc is None:
             return None
-        self.users.update_one({'email': email}, {'$set': update_data})
+        self.users.update_one({'email': email}, {'$set': update_data}) # Update the user document with the given email with the update data
         updated_user_doc = self.users.find_one({'email': email})
         user_id = str(updated_user_doc['_id'])
         return User(updated_user_doc['name'], updated_user_doc['email'], \

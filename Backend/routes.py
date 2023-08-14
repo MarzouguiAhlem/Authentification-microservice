@@ -2,11 +2,11 @@ from functools import wraps
 from controllers.auth_controller import AuthController
 from flask import Flask
 
-app = Flask(__name__)
-auth_controller = AuthController(app)
+app = Flask(__name__) # Create a new Flask app instance
+auth_controller = AuthController(app) # Create a new AuthController instance and pass in the Flask app instance
+
 
 #decorators*******************************************************************
-
 
 def loginRequired(f):
     @wraps(f)
@@ -37,13 +37,13 @@ def protected_logout():
 
 
 
-@app.route('/test', methods=['GET'])
+@app.route('/test', methods=['GET']) # for testing
 def test():
     return 'This is a test route!'
 
-@app.route('/user/login', methods=['POST'])
+@app.route('/user/login', methods=['POST']) # the route for the user login
 def login():
-    return auth_controller.login()
+    return auth_controller.login() # Call the login method of the AuthController instance when the route is accessed
 
 @app.route('/user/signout', methods=['GET'])
 @loginRequired
@@ -83,4 +83,4 @@ def resetPasswordStep3():
     return auth_controller.resetPasswordStep3()
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0', port=5000)
+    app.run(debug=True,host='0.0.0.0', port=5000) # Start the Flask app on port 5000 and listen for incoming requests

@@ -4,6 +4,7 @@ from utils.session_manager import SessionManager
 
 class AuthService:
     def __init__(self, app):
+        # Initialize the AuthService instance with a AuthDAO instance, a PasswordHasher instance, and a SessionManager instance
         self.auth_dao = AuthDAO()
         self.password_hasher = PasswordHasher()
         self.session_manager = SessionManager(app)
@@ -13,10 +14,10 @@ class AuthService:
     
 
     def signup_user(self, signup_data, session_data):
-        email = signup_data["email"]
+        email = signup_data["email"] 
         password = signup_data["password"]
-        hashed_password = self.password_hasher.hash_password(password)
-        signup_data["password"] = hashed_password
+        hashed_password = self.password_hasher.hash_password(password) # Hash the password using the PasswordHasher instance
+        signup_data["password"] = hashed_password # Replace the password in the signup_data dictionary with the hashed password
 
         if self.auth_dao.find_by_email(email) is not None:
             return {"msg": "Email address already in use"}
@@ -29,23 +30,23 @@ class AuthService:
 
     def authenticate(self, login_data):
         try:
-            email = login_data["email"]
-            password = login_data["password"]
-            user = self.auth_dao.find_by_email(email)
+            email = login_data["email"] # Get the email from the login_data dictionary
+            password = login_data["password"] # Get the password from the login_data dictionary
+            user = self.auth_dao.find_by_email(email) # Find the user with the given email in the database
 
-            if user is None:
+            if user is None: # If no user is found, return an error message
                 return {
                     "msg": "Invalid login credentials"
                 }
 
-            if not self.password_hasher.check_password(password, user.password):
+            if not self.password_hasher.check_password(password, user.password): # If the password is incorrect, return an error message
                 return {
                     "msg": "Invalid login credentials"
                 }
             
-            session_data = self.auth_dao.find_session_by_email(email)
+            session_data = self.auth_dao.find_session_by_email(email) # Find the session data for the user with the given email
             
-            new_session = self.session_manager.startSession(session_data)
+            new_session = self.session_manager.startSession(session_data) # Start a new session for the user
             return new_session
     
         except Exception as ex:
@@ -57,6 +58,7 @@ class AuthService:
         
 
     def signout(self, session_cookie):
+        # Destroy the session with the given session cookie
         return self.session_manager.destroy_session(session_cookie)
     
 
@@ -64,14 +66,14 @@ class AuthService:
 
     def send_confirmation_code(self, email):
         try:
-            if not email:
+            if not email: # If no email is provided, return an error message
                 return{'error': 'Email is required'}
             session_data = self.auth_dao.find_session_by_email(email)
             if session_data is None:
                 raise ValueError("Email not found in database")
             subject = "Action Required: Confirm your email"
             body = "We created an account for you. Please confirm your email address."
-            self.session_manager.send_code([email], subject, body)
+            self.session_manager.send_code([email], subject, body) # Send the confirmation code to the user's email address
             return {
                 "msg": "check your email!",
                 "current_user": session_data,
@@ -93,8 +95,8 @@ class AuthService:
     
     def verify_email(self, requestCode):
         try:
-            session_data = self.session_manager.verify_confirmation_code(requestCode)
-            if session_data is not None:
+            session_data = self.session_manager.verify_confirmation_code(requestCode) # Verify the confirmation code and get the session data
+            if session_data is not None: # If the session data is not None, update the user's email verification status and start a new session
                 email = session_data['email']
                 update_data = {"isVerified": True}
                 if (self.auth_dao.update(email,update_data)):
@@ -122,11 +124,11 @@ class AuthService:
     
     def reset_password_step1(self, email):
         try:
-            if self.auth_dao.find_by_email(email) is not None:
-                subject = "Password Reset"
-                body = "We received a request to change your password."
-                self.session_manager.start_reset_password_session(email)
-                self.session_manager.send_code([email],subject=subject,body=body)
+            if self.auth_dao.find_by_email(email) is not None: # If a user with the given email exists, start the password reset process
+                subject = "Password Reset" # Set the subject of the password reset email
+                body = "We received a request to change your password." # Set the body of the password reset email
+                self.session_manager.start_reset_password_session(email) # Start the password reset session
+                self.session_manager.send_code([email],subject=subject,body=body) # Send the password reset code to the user's email address
                 return {"msg": "check your email for confirmation code"}
             else:
                 return {"msg": "there is no account with this email"}

@@ -4,14 +4,14 @@ from dto.auth_dto import AuthDTO
 
 class AuthController:
     def __init__(self,app):
-        self.auth_service = AuthService(app)
+        self.auth_service = AuthService(app) # Create a new AuthService instance and pass in the Flask app instance
 
     
     def signup(self):
-        signup_data = AuthDTO(request.json).get_signup_data()
-        session_data = AuthDTO(request.json).get_session_data()
-        response = self.auth_service.signup_user(signup_data,session_data)
-        return jsonify(response)
+        signup_data = AuthDTO(request.json).get_signup_data() # Create a new AuthDTO instance and pass in the request JSON data, then get the signup data
+        session_data = AuthDTO(request.json).get_session_data() # Create a new AuthDTO instance and pass in the request JSON data, then get the session data
+        response = self.auth_service.signup_user(signup_data,session_data) # Call the signup_user method of the AuthService instance and pass in the signup and session data
+        return jsonify(response) # Return the response as a JSON object
 
     def login(self):
         login_data = AuthDTO(request.json).get_signin_data()
@@ -44,18 +44,18 @@ class AuthController:
     
 
     def resetPasswordStep1(self):
-        email = request.json.get("email")
+        email = request.json.get("email") # Get the email from the request JSON data
         response = self.auth_service.reset_password_step1(email)
         return jsonify(response)
     
     def resetPasswordStep2(self):
-        requestCode = int(request.json.get('verificationCode'))
+        requestCode = int(request.json.get('verificationCode')) # Get the verification code from the request JSON data and convert it to an integer
         response = self.auth_service.reset_password_step2(requestCode)
         return jsonify(response)
     
     def resetPasswordStep3(self):
-        password = request.json.get("password")
-        session_cookie = request.cookies.get('session')
+        password = request.json.get("password") # Get the new password from the request JSON data
+        session_cookie = request.cookies.get('session') # Get the session cookie from the request
         response = self.auth_service.reset_password_step3(password, session_cookie)
         return jsonify(response)
 
