@@ -14,6 +14,7 @@ import { setMsg } from "../../features/redux/appSlice";
 import { setSignupEmail, userSignup } from "../../features/redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { relativePaths } from '../../navigation';
+import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex";
 
 
 const SignupForm = () => {
@@ -23,8 +24,21 @@ const SignupForm = () => {
     firstName: yup.string().required().min(3).max(20).matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
     lastName: yup.string().required().min(2).max(20).matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
     email: yup.string().required().email().max(50),
-    password: yup.string().required().min(4).max(50),
-    confirmPassword: yup.string().required().min(4).max(50).oneOf([yup.ref('password'), null], 'Passwords must match'),
+    password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(50, "Password can't be longer than 50 characters")
+    .matches(lowercaseRegex, "Password must include at least one lowercase letter")
+    .matches(uppercaseRegex, "Password must include at least one uppercase letter")
+    .matches(digitRegex, "Password must include at least one digit")
+    .matches(specialCharRegex, "Password must include at least one special character"),
+    confirmPassword: yup
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .min(8, "Confirm password must be at least 8 characters")
+    .max(50, "Confirm password can't be longer than 50 characters"),
     adress: yup.string().required().max(200),
     terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
