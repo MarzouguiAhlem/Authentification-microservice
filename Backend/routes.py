@@ -1,9 +1,14 @@
 from functools import wraps
 from controllers.auth_controller import AuthController
 from flask import Flask
+from flask_cors import CORS
+from flask_socketio import SocketIO , emit
 
 app = Flask(__name__) # Create a new Flask app instance
 auth_controller = AuthController(app) # Create a new AuthController instance and pass in the Flask app instance
+
+socketio = SocketIO(app , cors_allowed_origins="http://localhost:3000")
+CORS(app, supports_credentials=True, resources={r"*": {"origins": "http://localhost:3000"}})
 
 
 #decorators*******************************************************************
