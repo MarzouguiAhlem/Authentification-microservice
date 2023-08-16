@@ -16,19 +16,7 @@ const ButtonLoading = ({ onClick }) => {
     }
   }, [isLoading]);
 
-  const handleClick = () => {
-    setLoading(true);
-    onClick()
-  };
-  return (
-    <Button
-      variant="light"
-      disabled={isLoading}
-      onClick={!isLoading ? handleClick : null}
-    >
-      {isLoading ? "Sending…" : "Resend Code"}
-    </Button>
-  );
+ 
 };
 
 export default ButtonLoading;
