@@ -19,7 +19,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { setResetPasswordStep } from "../../features/redux/appSlice";
 import { useState } from "react";
 import { relativePaths } from '../../navigation';
-import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex345605"
+import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex"
 import SignupForm from "../signupform/SignupForm";
 
 const ResetPasswordForm = () => {

@@ -1,7 +1,7 @@
 import uuid
 
 class User:
-    def __init__(self, name, email, password, address, phone, id = uuid.uuid4().hex, isVerified=False, role="admin"):
+    def __init__(self, name, email, password, address, phone, id = uuid.uuid4().hex, isVerified=False, role="user"):
         # Initialize the User instance with the given name, email, password, address and phone
         # If no ID is provided, generate a new UUID and set it as the ID
         # Set the isVerified attribute to False by default, and the role attribute to 'user' by default

@@ -7,7 +7,7 @@ class AuthDTO:
             self.address = data.get('address')
             self.phone = data.get('phone')
             self.isVerified = data.get('isVerified', False)
-            self.role = data.get('role', 'admin')
+            self.role = data.get('role', 'user')
         else:
             self.name = data.get('name') # If the data doesn't contain both 'firstName' and 'lastName' keys, set the name attribute to the 'name' value
             self.email = data.get('email')
@@ -15,7 +15,7 @@ class AuthDTO:
             self.address = data.get('address')
             self.phone = data.get('phone')
             self.isVerified = data.get('isVerified', False)
-            self.role = data.get('role', 'admin')
+            self.role = data.get('role', 'user')
         
 
     def get_signin_data(self):
