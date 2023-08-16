@@ -19,6 +19,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { setResetPasswordStep } from "../../features/redux/appSlice";
 import { useState } from "react";
 import { relativePaths } from '../../navigation';
+import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex345605"
+import SignupForm from "../signupform/SignupForm";
 
 const ResetPasswordForm = () => {
   const dispatch = useDispatch();
@@ -35,13 +37,21 @@ const ResetPasswordForm = () => {
   });
 
   const schema3 = yup.object().shape({
-    password: yup.string().required().min(4).max(50),
+    password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(50, "Password can't be longer than 50 characters")
+    .matches(lowercaseRegex, "Password must include at least one lowercase letter")
+    .matches(uppercaseRegex, "Password must include at least one uppercase letter")
+    .matches(digitRegex, "Password must include at least one digit")
+    .matches(specialCharRegex, "Password must include at least one special character"),
     confirmPassword: yup
-      .string()
-      .required()
-      .min(4)
-      .max(50)
-      .oneOf([yup.ref("password"), null], "Passwords must match"),
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .min(8, "Confirm password must be at least 8 characters")
+    .max(50, "Confirm password can't be longer than 50 characters"),
   });
 
   useEffect(() => {
