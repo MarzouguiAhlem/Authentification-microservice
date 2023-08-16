@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import './Signup.css'
 import * as yup from "yup";
+import { Field } from "formik";
 import * as formik from "formik";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -14,6 +15,7 @@ import { setMsg } from "../../features/redux/appSlice";
 import { setSignupEmail, userSignup } from "../../features/redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { relativePaths } from '../../navigation';
+import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex";
 
 
 const SignupForm = () => {
@@ -23,9 +25,31 @@ const SignupForm = () => {
     firstName: yup.string().required().min(3).max(20).matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
     lastName: yup.string().required().min(2).max(20).matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
     email: yup.string().required().email().max(50),
-    password: yup.string().required().min(4).max(50),
-    confirmPassword: yup.string().required().min(4).max(50).oneOf([yup.ref('password'), null], 'Passwords must match'),
-    adress: yup.string().required().max(200),
+    password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(50, "Password can't be longer than 50 characters")
+    .matches(lowercaseRegex, "Password must include at least one lowercase letter")
+    .matches(uppercaseRegex, "Password must include at least one uppercase letter")
+    .matches(digitRegex, "Password must include at least one digit")
+    .matches(specialCharRegex, "Password must include at least one special character"),
+    confirmPassword: yup
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .min(8, "Confirm password must be at least 8 characters")
+    .max(50, "Confirm password can't be longer than 50 characters"),
+    address: yup.string().required().max(200),
+    countryCode: yup
+    .string()
+    .required("Country Code is required")
+    .matches(/^\d+$/, "Country Code must be a number"),
+
+    phone: yup
+    .string()
+    .required("Phone number is required")
+    .matches(/^\d{8,}$/, "Phone number must have at least 8 digits"),
     terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
   const dispatch = useDispatch()
@@ -34,7 +58,7 @@ const SignupForm = () => {
 
   useEffect(() => {
     if (msg) {
-      if (msgType == "success") {
+      if (msgType === "success") {
         toast.success(msg, {
           position: "top-right",
           autoClose: 5000,
@@ -45,7 +69,7 @@ const SignupForm = () => {
           progress: undefined,
         });
       }
-      if (msgType == "error") {
+      if (msgType === "error") {
         toast.error(msg, {
           position: "top-right",
           autoClose: 5000,
@@ -65,11 +89,10 @@ const SignupForm = () => {
       <Formik
         validationSchema={schema}
         onSubmit={(values, actions) => {
-          let {confirmPassword,terms,...user} = values
-          console.log(user)
-          dispatch(userSignup({user:user, navigate:navigate}))
-          // dispatch(userSignup(user))
-          // .then(()=>navigate(relativePaths.verifyEmail))
+          const { confirmPassword, terms, countryCode, ...user } = values;
+          const phoneNumberWithCode = `+${countryCode} ${user.phone}`;
+          
+          dispatch(userSignup({ user: { ...user, phone: phoneNumberWithCode }, navigate }));
           actions.setSubmitting(true);
           actions.resetForm({
             values: {
@@ -78,7 +101,9 @@ const SignupForm = () => {
               email: "",
               password:"",
               confirmPassword:"",
-              adress: "",
+              address: "",
+              phone: "",
+              countryCode: "",
               terms: false,
             },
           });
@@ -89,7 +114,9 @@ const SignupForm = () => {
           email: "",
           password:"",
           confirmPassword:"",
-          adress: "",
+          address: "",
+          phone: "",
+          countryCode: "",
           terms: false,
         }}
       >
@@ -221,23 +248,67 @@ const SignupForm = () => {
 
                 <FloatingLabel
                   controlId="validationFormik06"
-                  label="Adress"
+                  label="Address"
                   className="mb-3"
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Adress"
-                    name="adress"
-                    value={values.adress}
+                    placeholder="Address"
+                    name="address"
+                    value={values.address}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    isValid={touched.adress && !errors.adress}
-                    isInvalid={touched.adress && !!errors.adress}
+                    isValid={touched.address && !errors.address}
+                    isInvalid={touched.address && !!errors.address}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.adress}
+                    {errors.address}
                   </Form.Control.Feedback>
                 </FloatingLabel>
+
+                <FloatingLabel
+                  controlId="validationFormik09"
+                  label="Country Code"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder="Country Code"
+                    name="countryCode"
+                    value={values.countryCode}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.countryCode && !errors.countryCode}
+                    isInvalid={touched.countryCode && !!errors.countryCode}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.countryCode}
+                  </Form.Control.Feedback>
+                </FloatingLabel>
+
+
+                <Form.Group controlId="validationFormik08">
+                  <FloatingLabel
+                    controlId="validationFormik08"
+                    label="Phone Number"
+                    className="mb-3"
+                  >
+
+                  <Field
+                    type="tel"
+                    placeholder="Phone Number"
+                    name="phone"
+                    as={Form.Control}
+                    isValid={touched.phone && !errors.phone}
+                    isInvalid={touched.phone && !!errors.phone}
+                  />
+
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone}
+                    </Form.Control.Feedback>
+                  </FloatingLabel>
+                </Form.Group>
+
 
                 <Form.Group className="mb-3">
                   <Form.Check
