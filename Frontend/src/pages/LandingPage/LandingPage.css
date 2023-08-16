@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Montserrat:wght@500&family=Open+Sans:wght@700&display=swap');
+
+.header{
+    background-image: url(./../../../public/assets/images/background.png);
+    display: block !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position: relative !important;
+    height: 670px !important;
+    width: 100% !important;
+}
+
+.header:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    /* height: 100%; */
+}
+
+#nav-wrap {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    font: 12px 'opensans-bold', sans-serif;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    margin: 0 auto;
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.styleDescrip{
+    font-family: 'Libre Baskerville', serif;
+    font-size: 18px;
+    color: #edecec;
+    text-shadow: 0px 1px 2px rgb(0 0 0 / 50%);
+    text-align: center;
+}
+
+
+.try-btn {
+    background-color: rgb(126, 167, 62);
+    font-family: "Montserrat" sans-serif;
+    text-align: center;
+    line-height: 36px;
+    letter-spacing: 0px;
+    font-weight: 700;
+    font-size: 13px;
+    border: 2px solid rgb(101, 163, 31);
+    padding: 4px 32px;
+    margin-top: 24px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    transition: all ease-in-out 480ms;
+}
+
+
+.try-btn:hover {
+    background-color: #fff;
+    color: rgb(126, 167, 62);
+}

@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Montserrat:wght@500&family=Open+Sans:wght@700&display=swap');
+.styleForm {
+    width: 50vw;
+    min-width: 300px;
+    margin: auto;
+}
+.styleTextContact{
+    font-family: 'Open Sans', sans-serif;
+    letter-spacing: 0.5 px ;
+    margin-bottom: 20px;
+
+}
+.btn-styling{
+    background-color: #9aca42 !important;
+    border-color: #9aca42 !important;
+    padding: 8px 20px 4px 32px;
+    margin-bottom: 50px;
+    font-family: "Montserrat" sans-serif !important;
+    /* text-align: center; */
+}
+.styleContactus{
+    text-align:left;
+    margin-left: 50px ;
+    font-family: "Montserrat" sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.5 px ;
+}

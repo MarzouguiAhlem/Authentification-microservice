@@ -1,0 +1,30 @@
+.footer-div{
+    margin-top: 50px;
+    height: 160px;
+    background-color: rgba(0, 0, 0, 0.911);
+}
+
+.footer-list{
+    display: flex;
+    justify-content: center;
+}
+
+.footer-icon{
+    color: rgb(165, 164, 164) !important;
+    font-size: 30px;
+    margin: 60px 20px 20px 12px;
+    cursor: pointer;
+}
+
+.footer-icon:hover{
+    color: rgb(240, 240, 240) !important;
+}
+
+.go-top {
+    font-size: 50px;
+    position: absolute;
+    left: 50%;
+    margin-left: -30px;
+    margin-top: 18px;
+    color: rgb(165, 164, 164) !important;
+}

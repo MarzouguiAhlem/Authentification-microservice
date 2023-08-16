@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans:wght@700&display=swap');
+
+
+.landing-navbar{
+    background-color: rgba(0, 0, 0, 0.1) !important;
+} 
+
+.opaque{
+    background-color: #333 !important;
+}
+
+.nav-link.active{
+    color: #F25C05 !important;
+}
+
+.nav-link:hover{
+    color: rgb(240, 202, 178);
+}
+
+.nav-link{
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+}
+
+.navbar-expand-lg .navbar-nav{
+    margin: auto;
+}

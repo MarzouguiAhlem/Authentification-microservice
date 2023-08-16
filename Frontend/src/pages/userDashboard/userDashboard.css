@@ -1,0 +1,52 @@
+.css-y5vkr9 {
+    width: 300px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 90vh;
+    width: 239px;
+    box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 6%), 0px 8px 10px 1px rgb(0 0 0 / 4%), 0px 3px 14px 2px rgb(0 0 0 / 4%);
+    background-repeat: no-repeat;
+    -webkit-background-position: top;
+    background-position: top;
+    -webkit-background-size: cover;
+    background-size: cover;
+    /* overflow: hidden !important; */
+    z-index: -1;
+    flex-wrap: nowrap o !important;
+    overflow-y: auto !important;
+    color: #fff;
+    -webkit-transition: all 250ms ease-in-out;
+    transition: all 250ms ease-in-out;
+    /* background-image: linear-gradient(to bottom, rgba(34,42,69, 0.5), rgba(34,42,69, 0.5)),url(./../../../public/assets/images/sidebar-bg-dark.jpg); */
+}
+
+.MuiAppBar-root{
+   position:absolute !important;
+   right: 17px !important;
+   box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 6%), 0px 8px 10px 1px rgb(0 0 0 / 4%), 0px 3px 14px 2px rgb(0 0 0 / 4%) !important;
+   background-color: #fff !important;
+   color: black !important;
+}
+
+.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover{
+    background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit.MuiIconButton-edgeStart.MuiIconButton-sizeMedium.css-dhvns5-MuiButtonBase-root-MuiIconButton-root{
+    margin-left: 2px ;
+}
+
+.css-mkzahr-MuiListSubheader-root{
+    background-color:unset !important;
+    color: unset !important;
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft.css-12i7wg6-MuiPaper-root-MuiDrawer-paper{
+    background-image: linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url(./../../../public/assets/images/sidebar-bg-dark.jpg);
+    color: rgb(214, 214, 214) !important;
+}
+
+.MuiDrawer-root.MuiDrawer-docked.css-cvumne-MuiDrawer-docked, .MuiDrawer-root.MuiDrawer-docked.css-aq1gdx-MuiDrawer-docked{
+    height: 100vh !important;
+}
