@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../httpClient";
 import { setMsg, setMsgType, setResetPasswordStep } from "./appSlice";
 import { absolutePaths, relativePaths } from "../../navigation";
-
 const url = "//localhost:5000";
 
 const initialState = {
@@ -18,6 +17,7 @@ const initialState = {
   sessionLoading:true,
   accessToken : "",
   refreshToken : ""
+  
 };
 
 export const resendConfirmationCode = createAsyncThunk(
@@ -51,8 +51,12 @@ export const userLogin = createAsyncThunk(
       else{
         thunkAPI.dispatch(setMsg("logged in successfully"));
         thunkAPI.dispatch(setMsgType("success"));
-        if(resp.data.current_user.role === "admin"){navigate(relativePaths.adminDashboard)}
-        else{navigate(relativePaths.userDashboard)}
+        if(resp.data.current_user.role === "user"){
+          navigate(relativePaths.userDashboard)
+        }
+        else{
+          navigate(relativePaths.adminDashboard)
+        }
       }
       return resp.data;
     } catch (error) {
@@ -92,8 +96,10 @@ export const verifyCode = createAsyncThunk(
     try {
       console.log(code)
       const resp = await axios.post(`${url}/user/verifyEmail`, code);
+      
       thunkAPI.dispatch(setMsg("Email verified, Congrats!"));
       thunkAPI.dispatch(setMsgType("success"));
+      console.log('Verify code resp', resp.data);
       return resp.data;
     } catch (error) {
       thunkAPI.dispatch(setMsg(error.response.data.msg));
@@ -213,6 +219,7 @@ const userSlice = createSlice({
       console.log("pending login");
     },
     [userLogin.fulfilled]: (state, action) => {
+      
       console.log("fulfilled login");
       if (action.payload) {
         console.log("login response");
@@ -239,7 +246,12 @@ const userSlice = createSlice({
       console.log("pending signup");
     },
     [userSignup.fulfilled]: (state, action) => {
-        console.log("fulfilled signup");
+        console.log("fulfilled signup", action.payload);
+        const currentUser = action.payload?.current_user;
+        if(!currentUser) {
+          console.error('No current user in payload');
+          return;
+        }
         if (action.payload) {
           console.log("login respnse");
           console.log(action.payload);
@@ -260,8 +272,15 @@ const userSlice = createSlice({
     },
     [verifyCode.fulfilled]: (state, action) => {
       //   console.log("fulfilled");
-      console.log("verify code response");
+      
+      console.log("verify code response" );
+      
       console.log(action.payload);
+      const currentUser = action.payload?.current_user;
+      if(!currentUser) {
+        console.error('No current user in response');
+        return;
+      }
       state.user.isLoggedIn = true
       state.user.isVerified = action.payload.current_user.isVerified;
       state.accessToken = action.payload.access_token;

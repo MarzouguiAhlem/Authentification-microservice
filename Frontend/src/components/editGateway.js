@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useSelector, useDispatch } from "react-redux"
 import Select from '@mui/material/Select';
 import { useNavigate } from 'react-router-dom';
+import { HeadProvider as Head } from 'react-head';
 
 import FormControl from '@mui/material/FormControl';
 import { updateGateway,getAllGateways } from "../features/redux/gatewaySlice";

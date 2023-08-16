@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { setMsg } from "../../features/redux/appSlice";
 import { getSessionInfo } from '../../features/redux/userSlice'
 import { Link } from "react-router-dom";
+import { HeadProvider as Head } from 'react-head';
 
 const LoginForm = () => {
   const { Formik } = formik;

@@ -16,6 +16,7 @@ import { verifyCode } from "../../features/redux/userSlice";
 import ButtonLoading from "../ButtonLoading/ButtonLoading";
 import { resendConfirmationCode } from "../../features/redux/userSlice";
 import { relativePaths } from '../../navigation';
+import { HeadProvider as Head } from 'react-head';
 
 const VerifyCodeForm = () => {
   const { Formik } = formik;
