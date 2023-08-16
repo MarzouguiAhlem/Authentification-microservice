@@ -49,7 +49,7 @@ class AuthController:
         return jsonify(response)
     
     def resetPasswordStep2(self):
-        requestCode = int(request.json.get('verificationCode')) # Get the verification code from the request JSON data and convert it to an integer
+        requestCode = int(request.json.get('code')) # Get the verification code from the request JSON data and convert it to an integer
         response = self.auth_service.reset_password_step2(requestCode)
         return jsonify(response)
     
