@@ -1,4 +1,3 @@
-# tests/test_auth_service.py
 
 import unittest
 from unittest.mock import patch
