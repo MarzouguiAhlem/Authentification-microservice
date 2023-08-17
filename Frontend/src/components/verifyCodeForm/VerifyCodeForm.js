@@ -1,3 +1,4 @@
+// Import necessary components and libraries
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -16,19 +17,22 @@ import { verifyCode } from "../../features/redux/userSlice";
 import ButtonLoading from "../ButtonLoading/ButtonLoading";
 import { resendConfirmationCode } from "../../features/redux/userSlice";
 import { relativePaths } from '../../navigation';
-import { HeadProvider as Head } from 'react-head';
+
 
 const VerifyCodeForm = () => {
-  const { Formik } = formik;
 
+// Define validation schema using Yup
+  const { Formik } = formik;
   const schema = yup.object().shape({
     email: yup.string(),
     verificationCode: yup.string().required().length(6),
   });
 
+  // Selecting state from Redux store
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Handling toast messages based on msgType
   const { msg, msgType, isLoading } = useSelector((state) => state.app);
   const { isLoggedIn } = useSelector((state) => state.user.user);
   const { email } = useSelector((state) => state.user.user);
@@ -74,7 +78,7 @@ const VerifyCodeForm = () => {
     }
   }, [msg]);
 
-
+  // Resend verification code button click handler
   const handlesendCodeButtonClick = () => {
     dispatch(resendConfirmationCode())
   }
@@ -85,7 +89,7 @@ const VerifyCodeForm = () => {
         validationSchema={schema}
         onSubmit={(values, actions) => {
           let code = { verificationCode: values.verificationCode };
-          dispatch(verifyCode(code));
+          dispatch(verifyCode(code)); // Dispatch action to verify the code
           actions.setSubmitting(false);
           actions.resetForm({ values: { email: email, verificationCode: "" } });
         }}
@@ -104,7 +108,7 @@ const VerifyCodeForm = () => {
             noValidate
             onSubmit={(e) => {
               e.preventDefault();
-              handleSubmit(e);
+              handleSubmit(e); // Handle form submission
               e.preventDefault();
             }}
           >

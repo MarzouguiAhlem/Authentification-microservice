@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; // Import necessary utilities from Redux Toolkit
 
-import axios from "../httpClient";
-import { setMsg, setMsgType, setResetPasswordStep } from "./appSlice";
-import { absolutePaths, relativePaths } from "../../navigation";
-const url = "//localhost:5000";
+import axios from "../httpClient"; // Import the custom axios instance for making HTTP requests
+import { setMsg, setMsgType, setResetPasswordStep } from "./appSlice"; // Import app-related actions from another file
+import { absolutePaths, relativePaths } from "../../navigation"; // Import navigation paths
+const url = "//localhost:5000"; // Define the base URL for API requests
 
 const initialState = {
   user: {
@@ -11,38 +11,39 @@ const initialState = {
     name: "",
     role: "",
     adress: "",
-    isVerified : false,
+    isVerified: false,
     isLoggedIn: false,
   },
-  sessionLoading:true,
-  accessToken : "",
-  refreshToken : ""
-  
+  sessionLoading: true,
+  accessToken: "",
+  refreshToken: "",
 };
 
+// Create an asynchronous thunk for resending the confirmation code
 export const resendConfirmationCode = createAsyncThunk(
   "user/resendConfirmationCode",
-  async(firstParam, thunkAPI)=>{
-    try{
+  async (firstParam, thunkAPI) => {
+    try {
       const resp = await axios.post(`${url}/user/sendConfirmationCode`);
       thunkAPI.dispatch(setMsg("verification code sent!"));
       thunkAPI.dispatch(setMsgType("info"));
-      return resp.data
-    }
-    catch(error){
+      return resp.data;
+    } catch (error) {
       thunkAPI.dispatch(setMsg(error.response.data.msg));
       thunkAPI.dispatch(setMsgType("error"));
-      console.log(error)
+      console.log(error);
     }
   }
 );
 
+// Create an asynchronous thunk for user login
 export const userLogin = createAsyncThunk(
   "user/userLogin",
   async (props, thunkAPI) => {
-    const {user,navigate} = props
+    const { user, navigate } = props;
     try {
       const resp = await axios.post(`${url}/user/login`, user);
+      // Handle login response and message dispatching
       if(!resp.data.current_user.isVerified){
         thunkAPI.dispatch(setMsg("please verify your account, check your email!"));
         thunkAPI.dispatch(setMsgType("warning"));
@@ -60,6 +61,7 @@ export const userLogin = createAsyncThunk(
       }
       return resp.data;
     } catch (error) {
+      // Handle login error and message dispatching
       thunkAPI.dispatch(setMsg(error.response.data.msg));
       thunkAPI.dispatch(setMsgType("error"));
       console.log(error);
@@ -67,12 +69,14 @@ export const userLogin = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for user signup
 export const userSignup = createAsyncThunk(
   "user/userSignup",
   async (props, thunkAPI) => {
-    const {user, navigate} = props
+    const { user, navigate } = props;
     try {
-      const resp = await axios.post(`${url}/user/signup`, user); 
+      const resp = await axios.post(`${url}/user/signup`, user);
+      // Handle signup response and message dispatching
       thunkAPI.dispatch(setMsg("Signup successfully"));
       thunkAPI.dispatch(setMsgType("success"));
       thunkAPI.dispatch(setMsg(resp.data.msg)); 
@@ -83,6 +87,7 @@ export const userSignup = createAsyncThunk(
       }
       return resp.data;
     } catch (error) {
+      // Handle signup error and message dispatching
       thunkAPI.dispatch(setMsg(error.response.data.msg));
       thunkAPI.dispatch(setMsgType("error"));
       console.log(error);
@@ -90,18 +95,20 @@ export const userSignup = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for verifying the verification code
 export const verifyCode = createAsyncThunk(
   "user/verifyCode",
   async (code, thunkAPI) => {
     try {
-      console.log(code)
       const resp = await axios.post(`${url}/user/verifyEmail`, code);
+      // Handle verification response and message dispatching
       
       thunkAPI.dispatch(setMsg("Email verified, Congrats!"));
       thunkAPI.dispatch(setMsgType("success"));
       console.log('Verify code resp', resp.data);
       return resp.data;
     } catch (error) {
+      // Handle verification error and message dispatching
       thunkAPI.dispatch(setMsg(error.response.data.msg));
       thunkAPI.dispatch(setMsgType("error"));
       console.log(error);
@@ -109,6 +116,7 @@ export const verifyCode = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for getting session information
 export const getSessionInfo = createAsyncThunk(
   "user/getSessionInfo",
   async (firstParam, thunkAPI) => {
@@ -123,6 +131,7 @@ export const getSessionInfo = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for user logout
 export const logout = createAsyncThunk(
   "user/logout",
   async (firstParam, thunkAPI) => {
@@ -146,6 +155,7 @@ export const logout = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for reset password step 1
 export const resetPasswordStep1 = createAsyncThunk(
   "user/resetPasswordStep1",
   async(email, thunkAPI)=>{
@@ -164,6 +174,7 @@ export const resetPasswordStep1 = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for reset password step 2
 export const resetPasswordStep2 = createAsyncThunk(
   "user/resetPasswordStep2",
   async(code, thunkAPI)=>{
@@ -182,6 +193,7 @@ export const resetPasswordStep2 = createAsyncThunk(
   }
 );
 
+// Create an asynchronous thunk for reset password step 3
 export const resetPasswordStep3 = createAsyncThunk(
   "user/resetPasswordStep3",
   async(password, thunkAPI)=>{
@@ -199,10 +211,12 @@ export const resetPasswordStep3 = createAsyncThunk(
   }
 );
 
+// Create a slice of the Redux store for user-related states
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    // Define reducer actions for setting data
     setAccessTokenFromSessionStorage: (state, action) => {
       state.accessToken = sessionStorage.getItem("accessToken") || ""
     },
@@ -214,6 +228,7 @@ const userSlice = createSlice({
     },
   },
   extraReducers: {
+    // Handle extra reducers for asynchronous actions
     [userLogin.pending]: (state) => {
       state.sessionLoading = true
       console.log("pending login");
@@ -271,8 +286,6 @@ const userSlice = createSlice({
       console.log("pending verify code");
     },
     [verifyCode.fulfilled]: (state, action) => {
-      //   console.log("fulfilled");
-      
       console.log("verify code response" );
       
       console.log(action.payload);
@@ -308,7 +321,6 @@ const userSlice = createSlice({
         state.user.isLoggedIn = action.payload.logged_in;
       }
       state.sessionLoading = false
-      // return state
 
     },
     [getSessionInfo.rejected]: (state) => {
@@ -318,7 +330,6 @@ const userSlice = createSlice({
       console.log("pending logout");
     },
     [logout.fulfilled]: (state, action) => {
-      //   console.log("fulfilled");
       console.log("logout resp");
       console.log(action.payload);
       state.user = {
@@ -342,7 +353,6 @@ const userSlice = createSlice({
       console.log("pending resendConfirmationCode");
     },
     [resendConfirmationCode.fulfilled]: (state, action) => {
-      //   console.log("fulfilled");
       console.log("resendConfirmationCode resp");
       console.log(action.payload);
     },
@@ -363,6 +373,7 @@ const userSlice = createSlice({
   },
 });
 
+// Export user-related actions and reducer from the slice
 export const { login, setSignupEmail,setAccessTokenFromSessionStorage, setRefreshTokenFromSessionStorage,setName } = userSlice.actions;
 
 export default userSlice.reducer;

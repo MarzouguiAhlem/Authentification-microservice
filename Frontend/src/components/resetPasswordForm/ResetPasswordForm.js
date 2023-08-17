@@ -1,34 +1,40 @@
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import "./../signupform/Signup.css";
-import * as yup from "yup";
+// Import necessary components and libraries
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import * as formik from "formik";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { setMsg } from "../../features/redux/appSlice";
-import { resetPasswordStep1, resetPasswordStep2, resetPasswordStep3, verifyCode } from "../../features/redux/userSlice";
-import ButtonLoading from "../ButtonLoading/ButtonLoading";
-import { resendConfirmationCode } from "../../features/redux/userSlice";
+import * as yup from "yup";
+import { Button, Row, Col, Form } from "react-bootstrap";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
 import CircularProgress from "@mui/material/CircularProgress";
-import { setResetPasswordStep } from "../../features/redux/appSlice";
-import { useState } from "react";
+import {
+  resetPasswordStep1,
+  resetPasswordStep2,
+  resetPasswordStep3,
+} from "../../features/redux/userSlice";
+import "./../signupform/Signup.css";
+import { toast } from "react-toastify";
+import { setMsg } from "../../features/redux/appSlice";
+import { useNavigate } from "react-router-dom";
 import { relativePaths } from '../../navigation';
-import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex"
-import SignupForm from "../signupform/SignupForm";
+import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex";
 
+
+// Define the ResetPasswordForm component
 const ResetPasswordForm = () => {
+  // Initialize Redux dispatch and navigate functions
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // State to track loading state of the send button
   const [sendButtonIsLoading, setSendButtonIsLoading] = useState(false);
+
+  // Access Redux state
   const { msg, msgType, isLoading } = useSelector((state) => state.app);
   const { resetPasswordStep } = useSelector((state) => state.app);
   const { Formik } = formik;
+
+
+  // Define validation schemas
   const schema1 = yup.object().shape({
     email: yup.string().required().email().max(50),
   });
@@ -54,6 +60,7 @@ const ResetPasswordForm = () => {
     .max(50, "Confirm password can't be longer than 50 characters"),
   });
 
+  // Handle toast messages based on Redux state
   useEffect(() => {
     if (msg) {
       if (msgType === "success") {
@@ -91,16 +98,19 @@ const ResetPasswordForm = () => {
     }
   }, [msg]);
 
-  const handleClickCreateAccount = () => {
+   // Navigate to account creation page
+   const handleClickCreateAccount = () => {
     navigate(relativePaths.authentification);
   };
 
+  // Handle send code button click (not implemented)
   const handlesendCodeButtonClick = () => {
     console.log("click");
   };
 
   return (
     <div className="container mt-2">
+      {/* Reset password step 1 */}
       {resetPasswordStep === 1 && (
         <>
           <header className="form-block__header">
@@ -116,10 +126,6 @@ const ResetPasswordForm = () => {
               setSendButtonIsLoading(true);
               dispatch(resetPasswordStep1(values))
               .then(()=>setSendButtonIsLoading(false))
-              //   let code = { verificationCode: values.verificationCode };
-              //   dispatch(verifyCode(code));
-              //   actions.setSubmitting(false);
-              //   actions.resetForm({ values: { email: ""} });
             }}
             initialValues={{ email: "" }}
           >
@@ -140,6 +146,7 @@ const ResetPasswordForm = () => {
                   e.preventDefault();
                 }}
               >
+                {/* Input fields for email */}
                 <Row className="mb-3">
                   <Col md={{ span: 10, offset: 1 }}>
                     <Form.Group controlId="validationFormik03">
@@ -162,9 +169,9 @@ const ResetPasswordForm = () => {
                       </FloatingLabel>
                     </Form.Group>
 
-                    <div className="btn-submit">
-                      {/* <ButtonLoading onClick={handlesendCodeButtonClick}/> */}
 
+                    {/* Send Reset Code button */}
+                    <div className="btn-submit">
                       <Button
                         variant="danger"
                         type="submit"
@@ -180,6 +187,7 @@ const ResetPasswordForm = () => {
                         )}
                       </Button>
                     </div>
+                    {/* Create account link */}
                     <div
                       style={{
                         display: "flex",
@@ -204,7 +212,8 @@ const ResetPasswordForm = () => {
           </Formik>
         </>
       )}
-
+      
+      {/* Reset password step 2 */}
       {resetPasswordStep === 2 && (
         <>
           <header className="form-block__header">
@@ -219,10 +228,6 @@ const ResetPasswordForm = () => {
               setSendButtonIsLoading(true);
               dispatch(resetPasswordStep2(values))
               .then(()=>setSendButtonIsLoading(false))
-              //   let code = { verificationCode: values.verificationCode };
-              //   dispatch(verifyCode(code));
-              //   actions.setSubmitting(false);
-              //   actions.resetForm({ values: { email: ""} });
               console.log("submit");
             }}
             initialValues={{ email: "" }}
@@ -244,6 +249,7 @@ const ResetPasswordForm = () => {
                   e.preventDefault();
                 }}
               >
+                {/* Input field for verification code */}
                 <Row className="mb-3">
                   <Col md={{ span: 10, offset: 1 }}>
                     <Form.Group controlId="validationFormik03">
@@ -266,8 +272,8 @@ const ResetPasswordForm = () => {
                       </FloatingLabel>
                     </Form.Group>
 
+                    {/* Confirm code button */}
                     <div className="btn-submit">
-                      {/* <ButtonLoading onClick={handlesendCodeButtonClick}/> */}
 
                       <Button
                         variant="danger"
@@ -291,7 +297,7 @@ const ResetPasswordForm = () => {
           </Formik>
         </>
       )}
-
+      {/* Reset password step 3 */}
       {resetPasswordStep === 3 && (
         <>
           <header className="form-block__header">
@@ -310,10 +316,6 @@ const ResetPasswordForm = () => {
                 navigate(relativePaths.landingPage)
               })
               console.log(sendButtonIsLoading);
-              //   let code = { verificationCode: values.verificationCode };
-              //   dispatch(verifyCode(code));
-              //   actions.setSubmitting(false);
-              //   actions.resetForm({ values: { email: ""} });
               console.log("submit");
             }}
             initialValues={{ password: "", confirmPassword: "" }}
@@ -335,6 +337,7 @@ const ResetPasswordForm = () => {
                   e.preventDefault();
                 }}
               >
+                {/* Input fields for new password */}
                 <Row className="mb-3">
                   <Col md={{ span: 10, offset: 1 }}>
                     <FloatingLabel
@@ -356,7 +359,7 @@ const ResetPasswordForm = () => {
                         {errors.password}
                       </Form.Control.Feedback>
                     </FloatingLabel>
-
+                    {/* Confirm password input */}
                     <FloatingLabel
                       controlId="validationFormik05"
                       label="Confirm Password"
@@ -381,9 +384,8 @@ const ResetPasswordForm = () => {
                       </Form.Control.Feedback>
                     </FloatingLabel>
 
+                    {/* Change Password button */}
                     <div className="btn-submit">
-                      {/* <ButtonLoading onClick={handlesendCodeButtonClick}/> */}
-
                       <Button
                         variant="danger"
                         type="submit"

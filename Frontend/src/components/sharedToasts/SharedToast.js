@@ -1,14 +1,12 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
-import { Link, Outlet } from 'react-router-dom';
-import Navbar from "../NavBar/Navbar";
-// import Loader from "../Loader/Loader";
+import {  Outlet } from 'react-router-dom';
+
 const SharedToast = () => {
   
   return (
     <>
-    {/* <Loader/> */}
-    {/* <Navbar/> */}
+ 
     <ToastContainer
       position="top-right"
       autoClose={5000}

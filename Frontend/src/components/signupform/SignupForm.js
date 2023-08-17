@@ -1,30 +1,27 @@
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import './Signup.css'
-import * as yup from "yup";
+// Import necessary components and libraries
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Field } from "formik";
 import * as formik from "formik";
+import * as yup from "yup";
+import { Button, Row, Col, Form } from "react-bootstrap";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { setMsg } from "../../features/redux/appSlice";
 import { setSignupEmail, userSignup } from "../../features/redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import { relativePaths } from '../../navigation';
 import { lowercaseRegex, uppercaseRegex, digitRegex, specialCharRegex } from "./passwordRegex";
 
-
+// Define the SignupForm component
 const SignupForm = () => {
+  // Initialize Formik and validation schema
   const { Formik } = formik;
 
   const schema = yup.object().shape({
     firstName: yup.string().required().min(3).max(20).matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
     lastName: yup.string().required().min(2).max(20).matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
     email: yup.string().required().email().max(50),
+    
     password: yup
     .string()
     .required("Password is required")
@@ -34,13 +31,16 @@ const SignupForm = () => {
     .matches(uppercaseRegex, "Password must include at least one uppercase letter")
     .matches(digitRegex, "Password must include at least one digit")
     .matches(specialCharRegex, "Password must include at least one special character"),
+    
     confirmPassword: yup
     .string()
     .required("Confirm password is required")
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .min(8, "Confirm password must be at least 8 characters")
     .max(50, "Confirm password can't be longer than 50 characters"),
+    
     address: yup.string().required().max(200),
+    
     countryCode: yup
     .string()
     .required("Country Code is required")
@@ -52,10 +52,13 @@ const SignupForm = () => {
     .matches(/^\d{8,}$/, "Phone number must have at least 8 digits"),
     terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
+
+  // Access Redux dispatch function 
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const { msg, msgType, isLoading } = useSelector((state) => state.app);
 
+  // Handle toast messages based on Redux state
   useEffect(() => {
     if (msg) {
       if (msgType === "success") {
@@ -80,20 +83,25 @@ const SignupForm = () => {
           progress: undefined,
           });
       }
+      // Clear the message in Redux store after displaying
       dispatch(setMsg(""))
     }
   }, [msg]);
 
   return (
     <div className="container mt-5">
+      {/* Formik handles the form validation and submission */}
       <Formik
         validationSchema={schema}
         onSubmit={(values, actions) => {
+          // Prepare the user object for signup
           const { confirmPassword, terms, countryCode, ...user } = values;
           const phoneNumberWithCode = `+${countryCode} ${user.phone}`;
           
+          // Dispatch userSignup action
           dispatch(userSignup({ user: { ...user, phone: phoneNumberWithCode }, navigate }));
           actions.setSubmitting(true);
+          // Reset form values
           actions.resetForm({
             values: {
               firstName: "",
@@ -137,8 +145,8 @@ const SignupForm = () => {
             }}>
             <Row className="mb-3">
               <Col md={{ span: 10, offset: 1 }}>
+                {/* Input fields for first name and last name */}
                 <Form.Group controlId="validationFormik01">
-                  {/* <Form.Label>First name</Form.Label> */}
                   <FloatingLabel
                     controlId="validationFormik01"
                     label="First Name"
@@ -309,7 +317,7 @@ const SignupForm = () => {
                   </FloatingLabel>
                 </Form.Group>
 
-
+                {/* Checkbox for accepting terms */}
                 <Form.Group className="mb-3">
                   <Form.Check
                     required
@@ -335,4 +343,5 @@ const SignupForm = () => {
   );
 };
 
+// Export the SignupForm component as default
 export default SignupForm;

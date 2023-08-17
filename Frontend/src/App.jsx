@@ -1,4 +1,3 @@
-import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.scss";
@@ -46,7 +45,6 @@ const App = () => {
   useEffect(() => {
     (async () => {
       try {
-        // dispatch(getCurrentPathBack())
         dispatch(getSessionInfo());
       } catch (error) {
         console.log("Not authenticated");
@@ -61,9 +59,7 @@ const App = () => {
           <Route
             index
             element={
-              // <ProtectedRouteLoggedOut>
               <Landing />
-              // </ProtectedRouteLoggedOut>
             }
           />
           <Route
@@ -127,11 +123,6 @@ const App = () => {
       </Routes>
     </BrowserRouter>
 
-    // <div className="App">
-    //   {/* {user ? <Logout/> : <Login/>} */}
-    //   {/* <SignupForm/> */}
-    //   <Test/>
-    // </div>
   );
 };
 

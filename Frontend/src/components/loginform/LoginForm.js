@@ -1,92 +1,82 @@
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import "./../signupform/Signup.css";
+// Import necessary components and libraries
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Formik } from "formik";
 import * as yup from "yup";
-import * as formik from "formik";
-import { useDispatch } from "react-redux";
-import { logout, userLogin } from "../../features/redux/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+
+// Import necessary Redux actions and slices
+import { logout, userLogin } from "../../features/redux/userSlice";
 import { setMsg } from "../../features/redux/appSlice";
-import { getSessionInfo } from '../../features/redux/userSlice'
-import { Link } from "react-router-dom";
-import { HeadProvider as Head } from 'react-head';
+import { getSessionInfo } from '../../features/redux/userSlice';
 
+// Import CSS file for styling
+import "./../signupform/Signup.css";
+
+// Define the LoginForm component
 const LoginForm = () => {
-  const { Formik } = formik;
-
+  // Initialize Formik validation schema
   const schema = yup.object().shape({
     email: yup.string().required().email().max(50),
     password: yup.string().required().min(2).max(50),
   });
 
+  // Access Redux dispatch function
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { msg, msgType, isLoading } = useSelector((state) => state.app);
-  const { isLoggedIn } = useSelector((state) => state.user.user);
-  const {user} = useSelector((state)=>state.user)
+  // Access relevant data from Redux store
+  const { msg, msgType } = useSelector((state) => state.app);
+  const { isLoggedIn, user } = useSelector((state) => state.user);
 
+  // Handle click event to retrieve session information
   const handleClick = (e) => {
-    e.preventDefault()
-    dispatch(getSessionInfo())
-  }
+    e.preventDefault();
+    dispatch(getSessionInfo());
+  };
+
+  // Handle click event for user logout
   const handleLogout = (e) => {
-    e.preventDefault()
-    dispatch(logout())
+    e.preventDefault();
+    dispatch(logout());
+  };
 
-  }
-
+  // Display toast messages based on the type of message received
   useEffect(() => {
     if (msg) {
+      const toastOptions = {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      };
+
       if (msgType === "success") {
-        toast.success(msg, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.success(msg, toastOptions);
+      } else if (msgType === "error") {
+        toast.error(msg, toastOptions);
+      } else if (msgType === "warning") {
+        toast.warn(msg, toastOptions);
       }
-      else if (msgType === "error") {
-        toast.error(msg, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          });
-      }
-      else if (msgType === "warning") {
-        toast.warn(msg, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          });
-      }
-      dispatch(setMsg(""))
+
+      // Clear the message in Redux store after displaying
+      dispatch(setMsg(""));
     }
-  }, [msg]);
+  }, [msg, msgType, dispatch]);
 
   return (
     <div className="container mt-5">
+      {/* Formik handles the form validation and submission */}
       <Formik
         validationSchema={schema}
         onSubmit={(values, actions) => {
-          dispatch(userLogin({user:values, navigate:navigate}))
+          dispatch(userLogin({ user: values, navigate: navigate }));
           actions.setSubmitting(false);
           actions.resetForm({ values: { email: "", password: "" } });
         }}
@@ -106,9 +96,9 @@ const LoginForm = () => {
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit(e);
-              e.preventDefault();
             }}
           >
+            {/* Input fields for email and password */}
             <Row className="mb-3">
               <Col md={{ span: 10, offset: 1 }}>
                 <Form.Group controlId="validationFormik03">
@@ -117,10 +107,10 @@ const LoginForm = () => {
                     label="Email"
                     className="mb-3"
                   >
+                    {/* Email input */}
                     <Form.Control
                       type="email"
                       placeholder="Email"
-                      aria-describedby="inputGroupPrepend"
                       name="email"
                       value={values.email}
                       onChange={handleChange}
@@ -128,6 +118,7 @@ const LoginForm = () => {
                       isValid={touched.email && !errors.email}
                       isInvalid={touched.email && !!errors.email}
                     />
+                    {/* Display error message if email is invalid */}
                     <Form.Control.Feedback type="invalid">
                       {errors.email}
                     </Form.Control.Feedback>
@@ -139,6 +130,7 @@ const LoginForm = () => {
                   label="Password"
                   className="mb-3"
                 >
+                  {/* Password input */}
                   <Form.Control
                     type="password"
                     placeholder="Password"
@@ -149,11 +141,13 @@ const LoginForm = () => {
                     isValid={touched.password && !errors.password}
                     isInvalid={touched.password && !!errors.password}
                   />
+                  {/* Display error message if password is invalid */}
                   <Form.Control.Feedback type="invalid">
                     {errors.password}
                   </Form.Control.Feedback>
                 </FloatingLabel>
 
+                {/* Submit button */}
                 <div className="btn-submit">
                   <Button variant="danger" type="submit">
                     Login
@@ -164,14 +158,15 @@ const LoginForm = () => {
           </Form>
         )}
       </Formik>
-      {/* <button onClick={handleClick}>get Session</button>
-      <button onClick={handleLogout}>logout</button> */}
+
+      {/* Link to reset password page */}
       <div>
-        <span>Forgot your password ? </span>
+        <span>Forgot your password? </span>
         <Link to="/resetPassword"> Click here</Link>
       </div>
     </div>
   );
 };
 
+// Export the LoginForm component as default
 export default LoginForm;
