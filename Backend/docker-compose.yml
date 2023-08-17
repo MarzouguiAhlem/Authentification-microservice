@@ -9,28 +9,13 @@ services:
       - "5000:5000" # Map port 5000 on the host to port 5000 in the container
     depends_on:
       # Specify the services that this service depends on
-      - mongo # This service depends on the mongo service
       - redis # This service depends on the redis service
     networks:
       # Specify the network settings for this service
       my-network:
         # Use the my-network network
-        ipv4_address: 172.16.238.2 # Assign the container the IP address 172.16.238.2
+        ipv4_address: 172.16.238.2 # Assign the container the IP address
 
-  mongo:
-    # Name of the service
-    image: mongo:latest # Use the latest version of the mongo image from Docker Hub
-    ports:
-      # Expose the container's port to the host machine
-      - "27017:27017" # Map port 27017 on the host to port 27017 in the container
-    volumes:
-      # Mount a volume from the host machine to the container
-      - ./data:/data/db # Map the ./data directory on the host to the /data/db directory in the container
-    networks:
-      # Specify the network settings for this service
-      my-network:
-        # Use the my-network network
-        ipv4_address: 172.16.238.3 # Assign the container the IP address 172.16.238.3
 
   redis:
     # Name of the service
