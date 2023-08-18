@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from controllers.auth_controller import AuthController  
 from services.auth_service import AuthService
-from daos.user_dao import AuthDAO
+from daos.auth_dao import AuthDAO
 from utils.session_manager import SessionManager
 
 class TestLoginFlow(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestLoginFlow(unittest.TestCase):
         # Arrange
         mock_user = {'email': 'test@example.com', 'password': 'password123'}
         
-        with patch('daos.user_dao.AuthDAO') as mock_dao:
+        with patch('daos.auth_dao.AuthDAO') as mock_dao:
             mock_dao.return_value.find_by_email.return_value = mock_user
             
         auth_controller = AuthController()
