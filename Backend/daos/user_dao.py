@@ -1,8 +1,8 @@
 from daos import db # Import the db object from the daos module
-from dto.auth_dto import AuthDTO
+from dto.user_dto import UserDTO
 from models.user import User
 
-class AuthDAO:
+class UserDAO:
     def __init__(self):
         self.users = db['users'] # Set the users collection in the db object as an instance variable
 
@@ -24,8 +24,8 @@ class AuthDAO:
         user_doc = self.find_by_email(email)
         if user_doc is None:
             return None
-        user_data = AuthDTO.from_user(user_doc)
-        session_data = user_data.get_session_data() # Get the session data from the AuthDTO instance
+        user_data = UserDTO.from_user(user_doc)
+        session_data = user_data.get_session_data() # Get the session data from the UserDTO instance
         return session_data
     
     def update(self, email, update_data):

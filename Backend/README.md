@@ -9,7 +9,7 @@ pip install -r requirements.txt
 Usage:
 To run the application, you can execute the following command:
 
-python routes.py
+python app.py
 
 Alternatively, you can use Docker Compose to start the app. To do this, make sure you have Docker and Docker Compose installed on your system, then run the following command:
 
