@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Start the Flask app when the container launches
-CMD ["python", "app.py"]
+CMD ["python", "routes.py"]

@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from services.auth_service import AuthService
-from dto.user_dto import UserDTO
+from dto.auth_dto import AuthDTO
 
 class AuthController:
     def __init__(self,app):
@@ -8,13 +8,13 @@ class AuthController:
 
     
     def signup(self):
-        signup_data = UserDTO(request.json).get_signup_data() # Create a new UserDTO instance and pass in the request JSON data, then get the signup data
-        session_data = UserDTO(request.json).get_session_data() # Create a new UserDTO instance and pass in the request JSON data, then get the session data
+        signup_data = AuthDTO(request.json).get_signup_data() # Create a new AuthDTO instance and pass in the request JSON data, then get the signup data
+        session_data = AuthDTO(request.json).get_session_data() # Create a new AuthDTO instance and pass in the request JSON data, then get the session data
         response = self.auth_service.signup_user(signup_data,session_data) # Call the signup_user method of the AuthService instance and pass in the signup and session data
         return jsonify(response) # Return the response as a JSON object
 
     def login(self):
-        login_data = UserDTO(request.json).get_signin_data()
+        login_data = AuthDTO(request.json).get_signin_data()
         response = self.auth_service.authenticate(login_data)
         return jsonify(response)
     

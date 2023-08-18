@@ -1,4 +1,4 @@
-class UserDTO:
+class AuthDTO:
     def __init__(self, data):
         if "firstName" in data and "firstName" in data: # Check if the data contains both 'firstName' and 'lastName' keys
             self.name = data.get('firstName') + " " + data.get('lastName') # If so, set the name attribute to the concatenation of the 'firstName' and 'lastName' values
@@ -60,4 +60,4 @@ class UserDTO:
             "isVerified": user.isVerified,
             "role": user.role
         }
-        return UserDTO(data) # Create a new UserDTO instance with the data and return it
+        return AuthDTO(data) # Create a new AuthDTO instance with the data and return it

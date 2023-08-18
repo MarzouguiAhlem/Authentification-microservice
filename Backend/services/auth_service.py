@@ -1,11 +1,11 @@
-from daos.user_dao import UserDAO
+from daos.auth_dao import AuthDAO
 from utils.password_hasher import PasswordHasher
 from utils.session_manager import SessionManager
 
 class AuthService:
     def __init__(self, app):
-        # Initialize the AuthService instance with a UserDAO instance, a PasswordHasher instance, and a SessionManager instance
-        self.user_dao = UserDAO()
+        # Initialize the AuthService instance with a AuthDAO instance, a PasswordHasher instance, and a SessionManager instance
+        self.auth_dao = AuthDAO()
         self.password_hasher = PasswordHasher()
         self.session_manager = SessionManager(app)
 
@@ -19,10 +19,10 @@ class AuthService:
         hashed_password = self.password_hasher.hash_password(password) # Hash the password using the PasswordHasher instance
         signup_data["password"] = hashed_password # Replace the password in the signup_data dictionary with the hashed password
 
-        if self.user_dao.find_by_email(email) is not None:
+        if self.auth_dao.find_by_email(email) is not None:
             return {"msg": "Email address already in use"}
 
-        self.user_dao.save(signup_data)
+        self.auth_dao.save(signup_data)
 
         new_session = self.session_manager.startSession(session_data)
         return new_session
@@ -32,7 +32,7 @@ class AuthService:
         try:
             email = login_data["email"] # Get the email from the login_data dictionary
             password = login_data["password"] # Get the password from the login_data dictionary
-            user = self.user_dao.find_by_email(email) # Find the user with the given email in the database
+            user = self.auth_dao.find_by_email(email) # Find the user with the given email in the database
 
             if user is None: # If no user is found, return an error message
                 return {
@@ -44,7 +44,7 @@ class AuthService:
                     "msg": "Invalid login credentials"
                 }
             
-            session_data = self.user_dao.find_session_by_email(email) # Find the session data for the user with the given email
+            session_data = self.auth_dao.find_session_by_email(email) # Find the session data for the user with the given email
             
             new_session = self.session_manager.startSession(session_data) # Start a new session for the user
             return new_session
@@ -68,7 +68,7 @@ class AuthService:
         try:
             if not email: # If no email is provided, return an error message
                 return{'error': 'Email is required'}
-            session_data = self.user_dao.find_session_by_email(email)
+            session_data = self.auth_dao.find_session_by_email(email)
             if session_data is None:
                 raise ValueError("Email not found in database")
             subject = "Action Required: Confirm your email"
@@ -99,7 +99,7 @@ class AuthService:
             if session_data is not None: # If the session data is not None, update the user's email verification status and start a new session
                 email = session_data['email']
                 update_data = {"isVerified": True}
-                if (self.user_dao.update(email,update_data)):
+                if (self.auth_dao.update(email,update_data)):
                     session_data["isVerified"]=True
                     new_session = self.session_manager.startSession(session_data)
                     return new_session
@@ -124,7 +124,7 @@ class AuthService:
     
     def reset_password_step1(self, email):
         try:
-            if self.user_dao.find_by_email(email) is not None: # If a user with the given email exists, start the password reset process
+            if self.auth_dao.find_by_email(email) is not None: # If a user with the given email exists, start the password reset process
                 subject = "Password Reset" # Set the subject of the password reset email
                 body = "We received a request to change your password." # Set the body of the password reset email
                 self.session_manager.start_reset_password_session(email) # Start the password reset session
@@ -158,7 +158,7 @@ class AuthService:
             session_is_verified = self.session_manager.verify_session(session_cookie)
             
             if session_data["code_verified"] and session_is_verified:
-                self.user_dao.update(email,update_data)
+                self.auth_dao.update(email,update_data)
                 self.signout(session_cookie)
                 return {"msg": "password changed successfully"}
             else:
